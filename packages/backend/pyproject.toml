@@ -1,0 +1,87 @@
+[project]
+name = "entelekx-backend"
+version = "0.1.0"
+description = "EntelekX Python backend — FastAPI, AI orchestration and tool runtime"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.1",
+    "sqlmodel>=0.0.24",
+    "sqlalchemy>=2.0.40",
+    "alembic>=1.15.2",
+    "asyncpg>=0.30.0",
+    "aiosqlite>=0.21.0",
+    "pgvector>=0.4.0",
+    "sqlite-vec>=0.1.0",
+    "fastembed>=0.6.0",
+    "httpx[http2]>=0.28.0",
+    "python-multipart>=0.0.20",
+    "python-dotenv>=1.1.0",
+    "bcrypt>=4.3.0",
+    "pyotp>=2.9.0",
+    "qrcode[pil]>=8.0",
+    "cryptography>=44.0.0",
+    "croniter>=6.0.0",
+    "jinja2>=3.1.6",
+    "pyyaml>=6.0.2",
+    "rich>=14.0.0",
+    "typer>=0.15.2",
+    "websockets>=15.0.1",
+    "psutil>=7.0.0",
+    "greenlet>=3.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.25.3",
+    "pytest-cov>=6.1.1",
+    "ruff>=0.11.6",
+    "mypy>=1.15.0",
+    "httpx2>=1.0.0",
+    "respx>=0.22.0",
+]
+
+[project.scripts]
+entelekx = "entelekx_backend.cli:main"
+
+[build-system]
+requires = ["setuptools>=77.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "I", "N", "W", "UP", "B", "C4", "SIM", "PLW1514"
+]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "postgres: tests requiring PostgreSQL",
+    "sqlite: tests requiring SQLite",
+    "slow: slow integration tests",
+]

@@ -1,0 +1,35 @@
+{
+  "name": "entelekx",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EntelekX — Personal AI operating system for builders",
+  "license": "MIT",
+  "author": "WizardingCode",
+  "type": "module",
+  "packageManager": "pnpm@10.6.3",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @entelekx/desktop dev",
+    "dev:web": "pnpm --filter @entelekx/web dev",
+    "build": "pnpm -r build",
+    "build:web": "pnpm --filter @entelekx/web build",
+    "build:desktop": "pnpm --filter @entelekx/desktop build",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "backend:dev": "pnpm --filter @entelekx/backend dev",
+    "backend:lint": "pnpm --filter @entelekx/backend lint",
+    "backend:test": "pnpm --filter @entelekx/backend test",
+    "postinstall": "pnpm -r exec playwright install chromium 2>/dev/null || true"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "eslint": "^9.23.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.9.3"
+  }
+}

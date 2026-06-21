@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    container_name: entelekx-app
+    ports:
+      - "127.0.0.1:7349:7349"
+    environment:
+      - DATABASE_URL=postgresql://entelekx:entelekx@postgres:5432/entelekx
+      - ENTELEKX_HOST=0.0.0.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - entelekx-data:/app/data
+    networks:
+      - entelekx
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: entelekx-postgres
+    environment:
+      - POSTGRES_USER=entelekx
+      - POSTGRES_PASSWORD=entelekx
+      - POSTGRES_DB=entelekx
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - entelekx
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U entelekx -d entelekx"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  entelekx-data:
+  postgres-data:
+
+networks:
+  entelekx:
+    driver: bridge
