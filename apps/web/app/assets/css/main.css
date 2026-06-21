@@ -1,13 +1,20 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --color-primary: #0ea5e9;
-  --color-primary-dark: #0284c7;
+@layer base {
+  html,
+  body,
+  #__nuxt {
+    height: 100%;
+  }
+
+  body {
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  }
 }
 
-html,
-body,
-#__nuxt {
-  height: 100%;
+@theme {
+  --color-primary: #0ea5e9;
+  --color-primary-dark: #0284c7;
 }
