@@ -137,9 +137,54 @@ async def compress_session(session_id: UUID):
     return {"status": "ok"}
 
 
+class CreateProjectRequest(BaseModel):
+    name: str
+    slug: str
+    description: str | None = None
+
+
+class CreateProjectResponse(BaseModel):
+    id: UUID
+    name: str
+    slug: str
+    created_at: str
+
+
+@chat_router.post("/projects", response_model=CreateProjectResponse, status_code=201)
+async def create_project(req: CreateProjectRequest):
+    settings = get_settings()
+    backend = get_database_backend(settings.resolved_database_url)
+    await backend.connect()
+    async with backend.session() as session:
+        from entelekx_backend.models import User
+
+        user_result = await session.execute(select(User))
+        user = user_result.scalars().first()
+        if user is None:
+            await backend.disconnect()
+            raise HTTPException(status_code=400, detail="No user exists; run setup first")
+        project = Project(user_id=user.id, name=req.name, slug=req.slug, description=req.description)
+        session.add(project)
+        await session.commit()
+        await session.refresh(project)
+    await backend.disconnect()
+    return CreateProjectResponse(
+        id=project.id,
+        name=project.name,
+        slug=project.slug,
+        created_at=project.created_at.isoformat(),
+    )
+
+
 def _get_provider_adapter(settings):
     registry = build_provider_registry(
         openrouter_api_key=settings.openrouter_api_key,
+        openai_api_key=settings.openai_api_key,
+        anthropic_api_key=settings.anthropic_api_key,
+        qwen_api_key=getattr(settings, "qwen_api_key", None),
+        kimi_api_key=getattr(settings, "kimi_api_key", None),
+        minimax_api_key=getattr(settings, "minimax_api_key", None),
+        minimax_group_id=getattr(settings, "minimax_group_id", None),
         ollama_base_url=settings.ollama_base_url,
     )
     provider = getattr(settings, "default_provider", "echo") or "echo"
@@ -149,28 +194,15 @@ def _get_provider_adapter(settings):
 def _list_tool_definitions(adapter) -> list[ToolDefinition]:
     if not adapter.supports_tools():
         return []
-    return [
-        ToolDefinition(
-            name="read_file",
-            description="Read the contents of a file.",
-            parameters={
-                "type": "object",
-                "properties": {
-                    "path": {"type": "string", "description": "File path to read"},
-                },
-                "required": ["path"],
-            },
-        ),
-        ToolDefinition(
-            name="write_file",
-            description="Write content to a file.",
-            parameters={
-                "type": "object",
-                "properties": {
-                    "path": {"type": "string", "description": "File path to write"},
-                    "content": {"type": "string", "description": "Content to write"},
-                },
-                "required": ["path", "content"],
-            },
-        ),
-    ]
+    from entelekx_backend.tools.registry import registry
+
+    definitions: list[ToolDefinition] = []
+    for info in registry._tools.values():
+        definitions.append(
+            ToolDefinition(
+                name=info.name,
+                description=info.description,
+                parameters=info.parameters,
+            )
+        )
+    return definitions

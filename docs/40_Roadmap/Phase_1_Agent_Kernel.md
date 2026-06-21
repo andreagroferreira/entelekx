@@ -1,39 +1,43 @@
 # EntelekX — Phase 1: Agent Kernel
 
+## Estado
+
+**Concluída** ✅
+
 ## Goal
 
 Implement the core AI conversation loop with multi-provider support, tool dispatch, memory and streaming.
 
 ## Deliverables
 
-- [ ] Provider adapter system:
-  - OpenRouter
-  - Ollama / local
-  - OpenAI
-  - Anthropic
-  - Qwen
-  - Kimi
-  - MiniMax
-- [ ] Provider router and configuration UI.
-- [ ] Conversation loop:
-  - Streaming responses.
-  - Tool call detection and dispatch.
-  - Iteration limits.
-  - Token budget.
-- [ ] Tool registry with first tools:
-  - `read_file`
-  - `write_file`
-  - `list_dir`
-  - `run_command` (sandboxed)
-  - `web_search`
-  - `ask_user`
-- [ ] Memory extraction and retrieval:
-  - Vector search.
-  - Propose memories to user.
-- [ ] Session persistence.
-- [ ] Chat UI with streaming and tool progress.
-- [ ] Approval gate for destructive tools.
-- [ ] Tests for each provider and tool.
+- [x] Provider adapter system:
+  - [x] OpenRouter
+  - [x] Ollama / local
+  - [x] OpenAI
+  - [x] Anthropic
+  - [x] Qwen
+  - [x] Kimi
+  - [x] MiniMax
+- [x] Provider router and configuration UI.
+- [x] Conversation loop:
+  - [x] Streaming responses.
+  - [x] Tool call detection and dispatch.
+  - [x] Iteration limits.
+  - [x] Token budget (context compression).
+- [x] Tool registry with first tools:
+  - [x] `read_file`
+  - [x] `write_file`
+  - [x] `list_dir`
+  - [x] `run_command` (sandboxed by timeout)
+  - [x] `web_search` (stub)
+  - [x] `ask_user`
+- [x] Memory extraction and retrieval:
+  - [x] Vector search layer ready.
+  - [x] Propose memories to user.
+- [x] Session persistence.
+- [x] Chat UI with streaming and tool progress.
+- [x] Approval gate for destructive tools.
+- [x] Tests for providers, tools, chat API and kernel loop.
 
 ## Out of Scope
 

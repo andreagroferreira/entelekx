@@ -1,12 +1,10 @@
 """Tests for the Agent Kernel chat loop and provider adapters."""
 
-import json
 from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import select
-from sqlmodel import select as sqlmodel_select
 
 from entelekx_backend.agent.kernel import AgentKernel, KernelEvent
 from entelekx_backend.db.backend import get_database_backend
@@ -120,7 +118,7 @@ async def test_kernel_approve_and_continue(sqlite_url, populated_session):
 
     class FakeAdapter(EchoAdapter):
         async def chat_stream(self, messages, model, tools=None, temperature=0.7, max_tokens=None):
-            for word in "done".split():
+            for word in ["done"]:
                 yield type("Chunk", (), {"delta": f"{word} ", "tool_calls": None, "finish_reason": "stop"})()
 
     kernel = AgentKernel(sqlite_url, FakeAdapter())

@@ -27,6 +27,12 @@ class Settings(BaseSettings):
     openrouter_api_key: str | None = None
     openai_api_key: str | None = None
     anthropic_api_key: str | None = None
+    qwen_api_key: str | None = None
+    kimi_api_key: str | None = None
+    minimax_api_key: str | None = None
+    minimax_group_id: str | None = None
+    ollama_base_url: str | None = None
+    default_provider: str = "echo"
 
     log_level: str = "INFO"
 
@@ -38,6 +44,11 @@ class Settings(BaseSettings):
         db_path = self.data_dir / "data" / "app.db"
         db_path.parent.mkdir(parents=True, exist_ok=True)
         return f"sqlite+aiosqlite:///{db_path}"
+
+    @property
+    def app_database_url(self) -> str:
+        """Return the active database URL for the application."""
+        return self.resolved_database_url
 
 
 @lru_cache

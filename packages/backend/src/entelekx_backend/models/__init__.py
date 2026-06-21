@@ -8,7 +8,8 @@ from uuid import UUID, uuid4
 from sqlalchemy import JSON, Column, String, Text
 from sqlmodel import Field, SQLModel
 
-from entelekx_backend.models.tool_call import ToolCall
+from entelekx_backend.models.tool_call import ToolCall as ToolCall
+
 
 def utc_now():
     return datetime.now(UTC)
