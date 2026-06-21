@@ -13,7 +13,9 @@ def client():
 
 def test_validate_database_sqlite(client: TestClient, tmp_path):
     db = tmp_path / "setup_validate.db"
-    response = client.post("/api/v1/setup/validate-database", json={"url": f"sqlite+aiosqlite:///{db}"})
+    response = client.post(
+        "/api/v1/setup/validate-database", json={"url": f"sqlite+aiosqlite:///{db}"}
+    )
     assert response.status_code == 200
     body = response.json()
     assert body["valid"] is True
@@ -23,7 +25,10 @@ def test_validate_database_sqlite(client: TestClient, tmp_path):
 
 def test_validate_database_postgres_string(client: TestClient):
     # Postgres URL with asyncpg driver; actual connectivity is not exercised.
-    response = client.post("/api/v1/setup/validate-database", json={"url": "postgresql+asyncpg://localhost/entelekx_test"})
+    response = client.post(
+        "/api/v1/setup/validate-database",
+        json={"url": "postgresql+asyncpg://localhost/entelekx_test"},
+    )
     assert response.status_code == 200
     body = response.json()
     assert body["backend"] == "postgres"
@@ -38,11 +43,15 @@ def test_initialize_sqlite(client: TestClient, tmp_path, monkeypatch):
     # Isolate wizard env file so it does not overwrite developer .env
     monkeypatch.setattr(
         "entelekx_backend.core.config.get_settings",
-        lambda: type("Settings", (), {
-            "data_dir": data_dir,
-            "resolved_database_url": db_url,
-            "version": "0.1.0",
-        })(),
+        lambda: type(
+            "Settings",
+            (),
+            {
+                "data_dir": data_dir,
+                "resolved_database_url": db_url,
+                "version": "0.1.0",
+            },
+        )(),
     )
 
     response = client.post(

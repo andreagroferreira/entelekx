@@ -48,9 +48,7 @@ async def test_create_user_project_session(sqlite_backend):
         session.add(message)
         await session.flush()
 
-        projects = await session.execute(
-            select(Project).where(Project.user_id == user.id)
-        )
+        projects = await session.execute(select(Project).where(Project.user_id == user.id))
         assert len(projects.scalars().all()) == 1
 
 
@@ -66,14 +64,10 @@ async def test_create_memories_and_documents(sqlite_backend):
         await session.flush()
 
         memory = Memory(project_id=project.id, content="User likes dark mode", source="chat")
-        document = Document(
-            project_id=project.id, title="Spec", body="Details", tags=["spec"]
-        )
+        document = Document(project_id=project.id, title="Spec", body="Details", tags=["spec"])
         session.add(memory)
         session.add(document)
         await session.flush()
 
-        docs = await session.execute(
-            select(Document).where(Document.project_id == project.id)
-        )
+        docs = await session.execute(select(Document).where(Document.project_id == project.id))
         assert docs.scalars().one().tags == ["spec"]

@@ -58,12 +58,15 @@ class OpenRouterAdapter(ProviderAdapter):
             "X-Title": "EntelekX",
         }
 
-        async with httpx.AsyncClient(timeout=120.0) as client, client.stream(
-            "POST",
-            f"{self.base_url}/chat/completions",
-            json=payload,
-            headers=headers,
-        ) as response:
+        async with (
+            httpx.AsyncClient(timeout=120.0) as client,
+            client.stream(
+                "POST",
+                f"{self.base_url}/chat/completions",
+                json=payload,
+                headers=headers,
+            ) as response,
+        ):
             response.raise_for_status()
             async for line in response.aiter_lines():
                 if not line.startswith("data: "):

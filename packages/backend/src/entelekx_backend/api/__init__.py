@@ -43,7 +43,13 @@ class DatabaseValidationResponse(BaseModel):
 
 @setup_router.post("/validate-database", response_model=DatabaseValidationResponse)
 async def validate_database(req: DatabaseValidationRequest):
-    backend_type = "postgres" if req.url.startswith("postgresql") else "sqlite" if req.url.startswith("sqlite") else "unknown"
+    backend_type = (
+        "postgres"
+        if req.url.startswith("postgresql")
+        else "sqlite"
+        if req.url.startswith("sqlite")
+        else "unknown"
+    )
     try:
         backend = get_database_backend(req.url)
         ok = await backend.connect() or await backend.health_check()
@@ -140,9 +146,7 @@ async def initialize(req: SetupInitializeRequest):
         raise HTTPException(status_code=400, detail=f"Database connection failed: {exc}") from exc
 
     async with backend.session() as session:
-        existing = await session.execute(
-            select(User).where(User.username == req.admin_username)
-        )
+        existing = await session.execute(select(User).where(User.username == req.admin_username))
         if existing.scalars().first() is None:
             user = User(
                 username=req.admin_username,

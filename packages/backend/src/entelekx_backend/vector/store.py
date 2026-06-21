@@ -155,6 +155,7 @@ class SqliteVecStore(VectorStore):
             db = await self._raw_db(conn)
             await db.enable_load_extension(True)
             import sqlite_vec
+
             await db.load_extension(sqlite_vec.loadable_path())
             await db.execute(
                 f"CREATE TABLE IF NOT EXISTS {text_table} (rowid INTEGER PRIMARY KEY, text TEXT)"
@@ -193,6 +194,7 @@ class SqliteVecStore(VectorStore):
             db = await self._raw_db(conn)
             await db.enable_load_extension(True)
             import sqlite_vec
+
             await db.load_extension(sqlite_vec.loadable_path())
             for id_, text_, embedding, meta in zip(ids, texts, embeddings, metadata, strict=True):
                 rowid = abs(hash(id_)) % (2**31)
@@ -253,6 +255,7 @@ class SqliteVecStore(VectorStore):
             db = await self._raw_db(conn)
             await db.enable_load_extension(True)
             import sqlite_vec
+
             await db.load_extension(sqlite_vec.loadable_path())
             cur = await db.execute(sql, params)
             rows = await cur.fetchall()
@@ -286,6 +289,7 @@ class SqliteVecStore(VectorStore):
             db = await self._raw_db(conn)
             await db.enable_load_extension(True)
             import sqlite_vec
+
             await db.load_extension(sqlite_vec.loadable_path())
             await db.execute(f"DELETE FROM {vec_table} WHERE rowid IN ({placeholders})", rowids)
             await db.execute(f"DELETE FROM {text_table} WHERE rowid IN ({placeholders})", rowids)

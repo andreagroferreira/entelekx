@@ -179,6 +179,7 @@ class SQLiteBackend(DatabaseBackend):
 
     async def run_migrations(self) -> None:
         await self._run_migrations_on_sync_engine()
+
     def get_session(self) -> AsyncSession:
         from sqlalchemy.orm import sessionmaker
 
@@ -190,7 +191,6 @@ class SQLiteBackend(DatabaseBackend):
             expire_on_commit=False,
         )
         return async_session_local()
-
 
     @staticmethod
     def _run_alembic(url: str) -> None:

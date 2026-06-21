@@ -93,15 +93,41 @@ async def test_kernel_tool_call_requires_approval(sqlite_url, populated_session,
 
     class FakeAdapter(EchoAdapter):
         async def chat_stream(self, messages, model, tools=None, temperature=0.7, max_tokens=None):
-            yield type("Chunk", (), {"delta": "", "tool_calls": [
-                {"id": "call_1", "type": "function", "function": {"name": "write_file", "arguments": '{"path": "/tmp/x.txt", "content": "hi"}'}},
-            ], "finish_reason": None})()
+            yield type(
+                "Chunk",
+                (),
+                {
+                    "delta": "",
+                    "tool_calls": [
+                        {
+                            "id": "call_1",
+                            "type": "function",
+                            "function": {
+                                "name": "write_file",
+                                "arguments": '{"path": "/tmp/x.txt", "content": "hi"}',
+                            },
+                        },
+                    ],
+                    "finish_reason": None,
+                },
+            )()
 
         def supports_tools(self):
             return True
 
     kernel = AgentKernel(sqlite_url, FakeAdapter())
-    events = [e async for e in kernel.run(session_id, "write a file", tools=[ToolDefinition(name="write_file", description="write", parameters={"type": "object"})])]
+    events = [
+        e
+        async for e in kernel.run(
+            session_id,
+            "write a file",
+            tools=[
+                ToolDefinition(
+                    name="write_file", description="write", parameters={"type": "object"}
+                )
+            ],
+        )
+    ]
     assert any(e.event == "tool.approval" for e in events)
 
     backend = get_database_backend(sqlite_url)
@@ -119,7 +145,9 @@ async def test_kernel_approve_and_continue(sqlite_url, populated_session):
     class FakeAdapter(EchoAdapter):
         async def chat_stream(self, messages, model, tools=None, temperature=0.7, max_tokens=None):
             for word in ["done"]:
-                yield type("Chunk", (), {"delta": f"{word} ", "tool_calls": None, "finish_reason": "stop"})()
+                yield type(
+                    "Chunk", (), {"delta": f"{word} ", "tool_calls": None, "finish_reason": "stop"}
+                )()
 
     kernel = AgentKernel(sqlite_url, FakeAdapter())
 
@@ -127,11 +155,22 @@ async def test_kernel_approve_and_continue(sqlite_url, populated_session):
     backend = get_database_backend(sqlite_url)
     await backend.connect()
     async with backend.session() as session:
-        msg = Message(session_id=session_id, role="assistant", content="", tool_calls=[{"id": "call_1", "name": "read_file", "arguments": {"path": "/tmp/x.txt"}}])
+        msg = Message(
+            session_id=session_id,
+            role="assistant",
+            content="",
+            tool_calls=[{"id": "call_1", "name": "read_file", "arguments": {"path": "/tmp/x.txt"}}],
+        )
         session.add(msg)
         await session.commit()
         await session.refresh(msg)
-        tc = ToolCall(session_id=session_id, message_id=msg.id, name="read_file", arguments={"path": "/tmp/x.txt"}, status="pending")
+        tc = ToolCall(
+            session_id=session_id,
+            message_id=msg.id,
+            name="read_file",
+            arguments={"path": "/tmp/x.txt"},
+            status="pending",
+        )
         session.add(tc)
         await session.commit()
         await session.refresh(tc)
@@ -144,11 +183,14 @@ async def test_kernel_approve_and_continue(sqlite_url, populated_session):
 
 def test_create_session_api(client):
     # The API requires an existing project; this test relies on a project not existing.
-    response = client.post("/api/v1/sessions", json={
-        "project_id": str(uuid4()),
-        "title": "Test",
-        "model": "echo",
-    })
+    response = client.post(
+        "/api/v1/sessions",
+        json={
+            "project_id": str(uuid4()),
+            "title": "Test",
+            "model": "echo",
+        },
+    )
     assert response.status_code == 404
 
 
@@ -169,7 +211,9 @@ async def test_compress_context(sqlite_url, populated_session):
     backend = get_database_backend(sqlite_url)
     await backend.connect()
     async with backend.session() as session:
-        result = await session.execute(select(Message).where(Message.session_id == session_id).order_by(Message.created_at))
+        result = await session.execute(
+            select(Message).where(Message.session_id == session_id).order_by(Message.created_at)
+        )
         remaining = result.scalars().all()
         assert len(remaining) <= 5
         assert any(m.role == "system" and "summarized" in m.content for m in remaining)
@@ -182,7 +226,13 @@ async def test_extract_memories(sqlite_url, populated_session):
     backend = get_database_backend(sqlite_url)
     await backend.connect()
     async with backend.session() as session:
-        session.add(Message(session_id=session_id, role="assistant", content="The user prefers dark mode for all interfaces."))
+        session.add(
+            Message(
+                session_id=session_id,
+                role="assistant",
+                content="The user prefers dark mode for all interfaces.",
+            )
+        )
         await session.commit()
     await backend.disconnect()
 

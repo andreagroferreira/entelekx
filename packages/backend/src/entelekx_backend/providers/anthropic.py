@@ -26,16 +26,29 @@ class AnthropicAdapter(ProviderAdapter):
         out: list[dict[str, Any]] = []
         for m in messages:
             if m.role == "tool":
-                out.append({"role": "user", "content": [{"type": "tool_result", "tool_use_id": m.tool_call_id, "content": m.content}]})
+                out.append(
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": m.tool_call_id,
+                                "content": m.content,
+                            }
+                        ],
+                    }
+                )
             elif m.role == "assistant" and m.tool_calls:
                 tool_use_blocks: list[dict[str, Any]] = []
                 for tc in m.tool_calls:
-                    tool_use_blocks.append({
-                        "type": "tool_use",
-                        "id": tc.get("id", ""),
-                        "name": tc.get("function", {}).get("name", ""),
-                        "input": tc.get("function", {}).get("arguments", {}),
-                    })
+                    tool_use_blocks.append(
+                        {
+                            "type": "tool_use",
+                            "id": tc.get("id", ""),
+                            "name": tc.get("function", {}).get("name", ""),
+                            "input": tc.get("function", {}).get("arguments", {}),
+                        }
+                    )
                 out.append({"role": "assistant", "content": tool_use_blocks})
             else:
                 out.append({"role": m.role, "content": m.content})
@@ -82,12 +95,15 @@ class AnthropicAdapter(ProviderAdapter):
             "Content-Type": "application/json",
         }
 
-        async with httpx.AsyncClient(timeout=120.0) as client, client.stream(
-            "POST",
-            f"{self.base_url}/v1/messages",
-            json=payload,
-            headers=headers,
-        ) as response:
+        async with (
+            httpx.AsyncClient(timeout=120.0) as client,
+            client.stream(
+                "POST",
+                f"{self.base_url}/v1/messages",
+                json=payload,
+                headers=headers,
+            ) as response,
+        ):
             response.raise_for_status()
             async for line in response.aiter_lines():
                 if not line.startswith("data: "):

@@ -33,7 +33,9 @@ def app_project_id():
                 session.add(user)
                 await session.commit()
                 await session.refresh(user)
-            result = await session.execute(select(Project).where(Project.slug == "chat_api_project"))
+            result = await session.execute(
+                select(Project).where(Project.slug == "chat_api_project")
+            )
             project = result.scalar_one_or_none()
             if project is None:
                 project = Project(user_id=user.id, name="Chat API Project", slug="chat_api_project")
@@ -52,7 +54,9 @@ async def app_session_id(app_project_id):
     backend = get_database_backend(settings.resolved_database_url)
     await backend.connect()
     async with backend.session() as session:
-        chat_session = Session(project_id=__import__("uuid").UUID(app_project_id), title="Chat", model="echo")
+        chat_session = Session(
+            project_id=__import__("uuid").UUID(app_project_id), title="Chat", model="echo"
+        )
         session.add(chat_session)
         await session.commit()
         await session.refresh(chat_session)
@@ -63,7 +67,9 @@ async def app_session_id(app_project_id):
 
 @pytest.mark.asyncio
 async def test_create_session_api(client, app_project_id):
-    response = client.post("/api/v1/sessions", json={"project_id": app_project_id, "title": "Chat", "model": "echo"})
+    response = client.post(
+        "/api/v1/sessions", json={"project_id": app_project_id, "title": "Chat", "model": "echo"}
+    )
     assert response.status_code == 201, response.text
     body = response.json()
     assert body["model"] == "echo"

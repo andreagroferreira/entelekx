@@ -163,7 +163,9 @@ async def create_project(req: CreateProjectRequest):
         if user is None:
             await backend.disconnect()
             raise HTTPException(status_code=400, detail="No user exists; run setup first")
-        project = Project(user_id=user.id, name=req.name, slug=req.slug, description=req.description)
+        project = Project(
+            user_id=user.id, name=req.name, slug=req.slug, description=req.description
+        )
         session.add(project)
         await session.commit()
         await session.refresh(project)

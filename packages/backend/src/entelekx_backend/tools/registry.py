@@ -62,7 +62,12 @@ class ToolRegistry:
 
     def metadata(self) -> list[dict[str, Any]]:
         return [
-            {"name": t.name, "description": t.description, "risk": t.risk, "requires_approval": t.requires_approval}
+            {
+                "name": t.name,
+                "description": t.description,
+                "risk": t.risk,
+                "requires_approval": t.requires_approval,
+            }
             for t in self._tools.values()
         ]
 

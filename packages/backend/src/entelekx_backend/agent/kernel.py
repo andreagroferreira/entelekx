@@ -61,7 +61,9 @@ class AgentKernel:
         tools = tools or []
 
         async with backend.session() as session:
-            db_session = await session.execute(sqlmodel_select(Session).where(Session.id == session_id))
+            db_session = await session.execute(
+                sqlmodel_select(Session).where(Session.id == session_id)
+            )
             chat_session = db_session.scalar_one_or_none()
             if chat_session is None:
                 yield KernelEvent("error", {"detail": f"Session {session_id} not found"})
@@ -110,11 +112,13 @@ class AgentKernel:
                         args = json.loads(args_raw) if isinstance(args_raw, str) else args_raw
                     except json.JSONDecodeError:
                         args = {}
-                    tool_calls_to_record.append({
-                        "id": tc.get("id", ""),
-                        "name": name,
-                        "arguments": args,
-                    })
+                    tool_calls_to_record.append(
+                        {
+                            "id": tc.get("id", ""),
+                            "name": name,
+                            "arguments": args,
+                        }
+                    )
 
                 if tool_calls_to_record:
                     assistant_msg = Message(
@@ -126,10 +130,13 @@ class AgentKernel:
                     session.add(assistant_msg)
                     await session.commit()
                     await session.refresh(assistant_msg)
-                    yield KernelEvent("message.tool_calls", {
-                        "message_id": str(assistant_msg.id),
-                        "tool_calls": tool_calls_to_record,
-                    })
+                    yield KernelEvent(
+                        "message.tool_calls",
+                        {
+                            "message_id": str(assistant_msg.id),
+                            "tool_calls": tool_calls_to_record,
+                        },
+                    )
 
                     for tc in tool_calls_to_record:
                         name = tc["name"]
@@ -147,22 +154,30 @@ class AgentKernel:
                             session.add(tool_call_row)
                             await session.commit()
                             await session.refresh(tool_call_row)
-                            yield KernelEvent("tool.approval", {
-                                "tool_call_id": str(tool_call_row.id),
-                                "name": name,
-                                "arguments": args,
-                                "risk": self._risk_level(name),
-                            })
+                            yield KernelEvent(
+                                "tool.approval",
+                                {
+                                    "tool_call_id": str(tool_call_row.id),
+                                    "name": name,
+                                    "arguments": args,
+                                    "risk": self._risk_level(name),
+                                },
+                            )
                             return
 
-                        result = await self._execute_tool(session, name, args, assistant_msg.id, tool_call_id)
-                        yield KernelEvent("tool.result", {
-                            "tool_call_id": tool_call_id,
-                            "name": name,
-                            "status": result.status,
-                            "output": result.output,
-                            "error": result.error,
-                        })
+                        result = await self._execute_tool(
+                            session, name, args, assistant_msg.id, tool_call_id
+                        )
+                        yield KernelEvent(
+                            "tool.result",
+                            {
+                                "tool_call_id": tool_call_id,
+                                "name": name,
+                                "status": result.status,
+                                "output": result.output,
+                                "error": result.error,
+                            },
+                        )
                     continue
 
                 # Plain assistant message.
@@ -174,11 +189,14 @@ class AgentKernel:
                 session.add(assistant_msg)
                 await session.commit()
                 await session.refresh(assistant_msg)
-                yield KernelEvent("message.complete", {
-                    "id": str(assistant_msg.id),
-                    "content": assistant_content,
-                    "finish_reason": finish_reason,
-                })
+                yield KernelEvent(
+                    "message.complete",
+                    {
+                        "id": str(assistant_msg.id),
+                        "content": assistant_content,
+                        "finish_reason": finish_reason,
+                    },
+                )
                 break
             else:
                 yield KernelEvent("error", {"detail": "Max iterations reached"})
@@ -234,7 +252,9 @@ class AgentKernel:
         tool_msg = Message(
             session_id=message_id,
             role="tool",
-            content=json.dumps({"status": result.status, "output": result.output, "error": result.error}),
+            content=json.dumps(
+                {"status": result.status, "output": result.output, "error": result.error}
+            ),
             tool_call_id=tool_call_id,
         )
         session.add(tool_msg)
@@ -252,7 +272,9 @@ class AgentKernel:
             return "medium"
         return "low"
 
-    async def approve_tool_call(self, tool_call_id: UUID, approved: bool, approved_by: str = "user") -> AsyncIterator[KernelEvent]:
+    async def approve_tool_call(
+        self, tool_call_id: UUID, approved: bool, approved_by: str = "user"
+    ) -> AsyncIterator[KernelEvent]:
         backend = await self._get_backend()
         async with backend.session() as session:
             result = await session.execute(select(ToolCall).where(ToolCall.id == tool_call_id))
@@ -265,13 +287,16 @@ class AgentKernel:
                 tc.status = "blocked"
                 tc.approved_by = approved_by
                 await session.commit()
-                yield KernelEvent("tool.result", {
-                    "tool_call_id": str(tc.id),
-                    "name": tc.name,
-                    "status": "blocked",
-                    "output": "",
-                    "error": "User rejected the tool call",
-                })
+                yield KernelEvent(
+                    "tool.result",
+                    {
+                        "tool_call_id": str(tc.id),
+                        "name": tc.name,
+                        "status": "blocked",
+                        "output": "",
+                        "error": "User rejected the tool call",
+                    },
+                )
                 return
 
             tc.status = "running"
@@ -279,13 +304,16 @@ class AgentKernel:
             await session.commit()
 
             result = await self._execute_tool_from_tool_call(session, tc)
-            yield KernelEvent("tool.result", {
-                "tool_call_id": str(tc.id),
-                "name": tc.name,
-                "status": result.status,
-                "output": result.output,
-                "error": result.error,
-            })
+            yield KernelEvent(
+                "tool.result",
+                {
+                    "tool_call_id": str(tc.id),
+                    "name": tc.name,
+                    "status": result.status,
+                    "output": result.output,
+                    "error": result.error,
+                },
+            )
 
             # Continue the loop from the same session.
             async for event in self.run(tc.session_id, "", tools=[]):
@@ -311,7 +339,9 @@ class AgentKernel:
         tool_msg = Message(
             session_id=tc.session_id,
             role="tool",
-            content=json.dumps({"status": result.status, "output": result.output, "error": result.error}),
+            content=json.dumps(
+                {"status": result.status, "output": result.output, "error": result.error}
+            ),
             tool_call_id=str(tc.id),
         )
         session.add(tool_msg)

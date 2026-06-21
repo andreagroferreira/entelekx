@@ -18,7 +18,12 @@ from entelekx_backend.providers.base import (
 class MiniMaxAdapter(ProviderAdapter):
     """MiniMax chat completion adapter."""
 
-    def __init__(self, api_key: str, group_id: str | None = None, base_url: str = "https://api.minimaxi.chat/v1"):
+    def __init__(
+        self,
+        api_key: str,
+        group_id: str | None = None,
+        base_url: str = "https://api.minimaxi.chat/v1",
+    ):
         self.api_key = api_key
         self.group_id = group_id or ""
         self.base_url = base_url.rstrip("/")
@@ -47,12 +52,15 @@ class MiniMaxAdapter(ProviderAdapter):
         if self.group_id:
             headers["Group-Id"] = self.group_id
 
-        async with httpx.AsyncClient(timeout=120.0) as client, client.stream(
-            "POST",
-            f"{self.base_url}/text/chatcompletion_v2",
-            json=payload,
-            headers=headers,
-        ) as response:
+        async with (
+            httpx.AsyncClient(timeout=120.0) as client,
+            client.stream(
+                "POST",
+                f"{self.base_url}/text/chatcompletion_v2",
+                json=payload,
+                headers=headers,
+            ) as response,
+        ):
             response.raise_for_status()
             async for line in response.aiter_lines():
                 if not line.startswith("data: "):
