@@ -7,10 +7,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-load_dotenv(encoding="utf-8-sig")
-
 from entelekx_backend.api import health_router, setup_router
-from entelekx_backend.core.config import Settings, get_settings
+from entelekx_backend.core.config import get_settings
+
+load_dotenv(encoding="utf-8-sig")
 
 settings = get_settings()
 

@@ -2,7 +2,7 @@
 
 import pytest
 
-from entelekx_backend.core.config import Settings, get_settings
+from entelekx_backend.core.config import Settings
 from entelekx_backend.db.backend import SQLiteBackend, get_database_backend
 from entelekx_backend.vector.store import get_vector_store
 

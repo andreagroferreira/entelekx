@@ -1,13 +1,13 @@
 """Base models and shared fields."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from sqlmodel import Field, SQLModel
 
 
 def utc_now():
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class BaseModel(SQLModel):
