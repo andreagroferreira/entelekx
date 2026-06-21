@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from entelekx_backend.api import health_router, setup_router
+from entelekx_backend.api import chat_router, health_router, setup_router
 from entelekx_backend.core.config import get_settings
 
 load_dotenv(encoding="utf-8-sig")
@@ -31,6 +31,7 @@ app.add_middleware(
 
 app.include_router(health_router)
 app.include_router(setup_router, prefix="/api/v1/setup")
+app.include_router(chat_router, prefix="/api/v1")
 
 # Serve the bundled Nuxt SPA from a relative static directory if present.
 _STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")

@@ -8,9 +8,12 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from sqlmodel import select
 
+from entelekx_backend.api.chat import chat_router
 from entelekx_backend.core.config import get_settings
 from entelekx_backend.db.backend import get_database_backend
 from entelekx_backend.models import ProviderConfig, User
+
+__all__ = ["chat_router", "health_router", "setup_router"]
 
 health_router = APIRouter(tags=["health"])
 setup_router = APIRouter(tags=["setup"])

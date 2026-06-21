@@ -8,6 +8,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import JSON, Column, String, Text
 from sqlmodel import Field, SQLModel
 
+from entelekx_backend.models.tool_call import ToolCall
 
 def utc_now():
     return datetime.now(UTC)
@@ -60,6 +61,8 @@ class Message(BaseModel, table=True):
     session_id: UUID = Field(foreign_key="sessions.id")
     role: str = Field(sa_column=Column("role", String(50), nullable=False))
     content: str = Field(sa_column=Column("content", Text, nullable=False))
+    tool_calls: list[dict] = Field(default_factory=list, sa_column=Column("tool_calls", JSON))
+    tool_call_id: str | None = Field(default=None, sa_column=Column("tool_call_id", String(255)))
     extra: dict = Field(default_factory=dict, sa_column=Column("metadata", JSON))
 
 
