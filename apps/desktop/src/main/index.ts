@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import fs from 'node:fs'
 import path from 'node:path'
 import { spawn } from 'node:child_process'
 import log from 'electron-log'
@@ -6,7 +7,41 @@ import log from 'electron-log'
 const DEFAULT_BACKEND_PORT = 7349
 
 let mainWindow: BrowserWindow | null = null
+let wizardWindow: BrowserWindow | null = null
 let backendProcess: ReturnType<typeof spawn> | null = null
+
+function getDataDir(): string {
+  const dir = path.join(app.getPath('home'), '.entelekx')
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true })
+  }
+  return dir
+}
+
+function getWizardFlagPath(): string {
+  return path.join(getDataDir(), 'wizard-completed')
+}
+
+function isWizardCompleted(): boolean {
+  try {
+    return fs.existsSync(getWizardFlagPath())
+  } catch {
+    return false
+  }
+}
+
+function setWizardCompleted(value: boolean): void {
+  const flagPath = getWizardFlagPath()
+  if (value) {
+    fs.writeFileSync(flagPath, new Date().toISOString(), 'utf-8')
+  } else {
+    try {
+      fs.unlinkSync(flagPath)
+    } catch {
+      // ignore
+    }
+  }
+}
 
 function getBackendPort(): number {
   // In a real app we would scan for an available port.
@@ -70,13 +105,14 @@ function stopBackend() {
   }
 }
 
-function createWindow() {
+function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
     minWidth: 900,
     minHeight: 600,
     titleBarStyle: 'hiddenInset',
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       contextIsolation: true,
@@ -92,18 +128,63 @@ function createWindow() {
     return { action: 'deny' }
   })
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow?.show()
+  })
+
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 }
 
-app.whenReady().then(async () => {
+function createWizardWindow() {
+  wizardWindow = new BrowserWindow({
+    width: 900,
+    height: 680,
+    minWidth: 760,
+    minHeight: 560,
+    resizable: true,
+    title: 'Welcome to EntelekX',
+    titleBarStyle: 'default',
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, '../preload/index.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  })
+
+  const port = getBackendPort()
+  wizardWindow.loadURL(`http://127.0.0.1:${port}/setup`)
+
+  wizardWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url)
+    return { action: 'deny' }
+  })
+
+  wizardWindow.once('ready-to-show', () => {
+    wizardWindow?.show()
+  })
+
+  wizardWindow.on('closed', () => {
+    wizardWindow = null
+  })
+}
+
+async function launch() {
   const ok = await startBackend()
   if (!ok) {
     log.error('Backend failed to start; opening window anyway for diagnostics')
   }
-  createWindow()
-})
+
+  if (isWizardCompleted()) {
+    createMainWindow()
+  } else {
+    createWizardWindow()
+  }
+}
+
+app.whenReady().then(launch)
 
 app.on('window-all-closed', () => {
   stopBackend()
@@ -111,7 +192,13 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  if (BrowserWindow.getAllWindows().length === 0) {
+    if (isWizardCompleted()) {
+      createMainWindow()
+    } else {
+      createWizardWindow()
+    }
+  }
 })
 
 app.on('before-quit', () => {
@@ -122,4 +209,17 @@ ipcMain.handle('get-backend-port', () => getBackendPort())
 ipcMain.handle('get-app-version', () => app.getVersion())
 ipcMain.handle('open-external', (_event, url: string) => {
   shell.openExternal(url)
+})
+ipcMain.handle('get-wizard-completed', () => isWizardCompleted())
+ipcMain.handle('set-wizard-completed', (_event, value: boolean) => {
+  setWizardCompleted(value)
+})
+ipcMain.handle('close-wizard', () => {
+  if (wizardWindow) {
+    wizardWindow.close()
+    wizardWindow = null
+  }
+  if (!mainWindow) {
+    createMainWindow()
+  }
 })

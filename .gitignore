@@ -15,6 +15,7 @@ build/
 .nuxt/
 .output/
 coverage/
+out/
 .vscode/settings.json
 .idea/
 *.sqlite

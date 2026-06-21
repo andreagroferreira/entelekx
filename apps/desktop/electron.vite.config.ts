@@ -19,5 +19,12 @@ export default defineConfig({
       },
     },
   },
-  renderer: {},
+  renderer: {
+    root: '.',
+    build: {
+      rollupOptions: {
+        input: 'index.html',
+      },
+    },
+  },
 })

@@ -13,8 +13,3 @@
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   }
 }
-
-@theme {
-  --color-primary: #0ea5e9;
-  --color-primary-dark: #0284c7;
-}

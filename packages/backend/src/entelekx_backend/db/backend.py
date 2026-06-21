@@ -199,4 +199,5 @@ def get_database_backend(url: str | None = None) -> DatabaseBackend:
         return PostgresBackend(resolved)
     if resolved.startswith("sqlite"):
         return SQLiteBackend(resolved)
+    raise ValueError(f"Unsupported database URL scheme: {resolved}")
     raise ValueError(f"Unsupported database URL: {resolved}")
