@@ -71,26 +71,6 @@ function activeTabClass(tab: string) {
 
       <div class="flex flex-col gap-2 mt-auto shrink-0 pt-2">
         <NuxtLink
-          to="/chat"
-          title="Chat"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors shrink-0"
-          :class="[
-            $route.path === '/chat' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
-          ]"
-        >
-          <UIcon name="i-heroicons-chat-bubble-left-right" class="w-5 h-5" />
-        </NuxtLink>
-        <NuxtLink
-          to="/studio"
-          title="Dev Studio"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors shrink-0"
-          :class="[
-            $route.path === '/studio' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
-          ]"
-        >
-          <UIcon name="i-heroicons-code-bracket" class="w-5 h-5" />
-        </NuxtLink>
-        <NuxtLink
           to="/settings"
           title="Settings"
           class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors shrink-0"

@@ -262,73 +262,73 @@ function triggerSuggestion(suggestion: { title: string; subtitle: string }) {
 <template>
   <div class="min-h-screen bg-[#111111] text-[#eeeeee] flex">
     <!-- Global Navigation (52px) -->
-    <aside class="w-[52px] bg-[#191919] border-r border-white/[0.08] flex flex-col items-center py-3 shrink-0">
-      <div class="mb-4">
+    <aside class="w-[52px] bg-[#191919] border-r border-white/[0.08] flex flex-col items-center py-3 shrink-0 h-screen">
+      <div class="mb-4 shrink-0">
         <div class="w-8 h-8 rounded-lg bg-[#7b68ee] flex items-center justify-center text-white font-bold text-sm">E</div>
       </div>
-      <nav class="flex-1 flex flex-col gap-2">
-        <NuxtLink
+      <nav class="flex-1 flex flex-col gap-2 min-h-0 overflow-y-auto scrollbar-hide py-1">
+          <NuxtLink
           to="/"
           title="Home"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
         >
           <UIcon name="i-heroicons-home" class="w-5 h-5" />
         </NuxtLink>
         <NuxtLink
           to="/chat"
           title="Chat"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors bg-white/[0.08] text-[#eeeeee]"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors bg-white/[0.08] text-[#eeeeee] shrink-0"
         >
           <UIcon name="i-heroicons-chat-bubble-left-right" class="w-5 h-5" />
         </NuxtLink>
         <NuxtLink
           to="/"
           title="AI Hub"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
         >
           <UIcon name="i-heroicons-bolt" class="w-5 h-5" />
         </NuxtLink>
         <NuxtLink
           to="/studio"
           title="Dev Studio"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
         >
           <UIcon name="i-heroicons-code-bracket" class="w-5 h-5" />
         </NuxtLink>
         <NuxtLink
           to="/"
           title="Life OS"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
         >
           <UIcon name="i-heroicons-clipboard-document-list" class="w-5 h-5" />
         </NuxtLink>
       </nav>
-      <div class="flex flex-col gap-2 mt-auto">
+      <div class="flex flex-col gap-2 mt-auto shrink-0 pt-2">
         <NuxtLink
           to="/settings"
           title="Settings"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
         >
           <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5" />
         </NuxtLink>
-        <button class="flex items-center justify-center w-9 h-9 rounded-lg text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] transition-colors">
+        <button class="flex items-center justify-center w-9 h-9 rounded-lg text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] transition-colors shrink-0">
           <div class="w-7 h-7 rounded-full bg-[#7b68ee] flex items-center justify-center text-white text-xs font-medium">A</div>
         </button>
       </div>
     </aside>
 
     <!-- Chat sidebar -->
-    <aside class="w-[255px] bg-[#191919] border-r border-white/[0.08] flex flex-col shrink-0">
-      <div class="h-11 flex items-center px-4 border-b border-white/[0.08]">
+    <aside class="w-[255px] bg-[#191919] border-r border-white/[0.08] flex flex-col shrink-0 h-screen">
+      <div class="h-11 flex items-center px-4 border-b border-white/[0.08] shrink-0">
         <span class="font-semibold text-sm">EntelekX</span>
       </div>
-      <div class="p-3">
+      <div class="p-3 shrink-0">
         <button class="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.06] hover:bg-white/[0.09] text-[#eeeeee] text-sm transition-colors">
           <UIcon name="i-heroicons-plus" class="w-4 h-4" />
           New chat
         </button>
       </div>
-      <nav class="flex-1 overflow-y-auto scrollbar-hide px-2">
+      <nav class="flex-1 overflow-y-auto scrollbar-hide px-2 min-h-0 pb-3">
         <div class="px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#7b7b7b]">Today</div>
         <button
           v-for="conv in conversations.filter(c => c.time === 'Today')"
@@ -354,7 +354,7 @@ function triggerSuggestion(suggestion: { title: string; subtitle: string }) {
     </aside>
 
     <!-- Chat main area -->
-    <div class="flex-1 flex flex-col min-w-0 bg-[#090909]">
+    <div class="flex-1 flex flex-col min-w-0 bg-[#090909] h-screen overflow-hidden">
       <!-- Top bar -->
       <div class="h-11 bg-[#111111] border-b border-white/[0.08] flex items-center justify-between px-4 shrink-0">
         <div class="flex items-center gap-2 text-sm">
@@ -371,7 +371,7 @@ function triggerSuggestion(suggestion: { title: string; subtitle: string }) {
       </div>
 
       <!-- Messages -->
-      <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-hide px-6 py-8">
+      <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-hide px-6 py-8 overflow-x-hidden">
         <div class="max-w-3xl mx-auto">
           <!-- Empty state -->
           <div v-if="messages.length === 0" class="text-center py-16">
