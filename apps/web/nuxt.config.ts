@@ -2,13 +2,20 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-06-21',
   devtools: { enabled: true },
   srcDir: 'app/',
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: ['@nuxt/ui', '@nuxtjs/tailwindcss'],
   colorMode: {
     preference: 'dark',
     fallback: 'dark',
     classSuffix: '',
     storage: 'cookie',
     dataValue: 'dark',
+  },
+  ui: {
+    safelistColors: ['primary'],
+    colors: {
+      primary: 'emerald',
+      neutral: 'zinc',
+    },
   },
   tailwindcss: {
     cssPath: '~/assets/css/main.css',

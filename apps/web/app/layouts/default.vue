@@ -33,9 +33,6 @@ const tabRoutes: Record<string, string> = {
   Docs: '/',
 }
 
-function isActive(path: string) {
-  return route.path === path
-}
 function activeTabClass(tab: string) {
   return route.path === tabRoutes[tab]
 }
@@ -50,26 +47,48 @@ function activeTabClass(tab: string) {
       </div>
 
       <nav class="flex-1 flex flex-col gap-2">
+        <!-- Home is real route -->
         <NuxtLink
-          v-for="item in globalNav"
-          :key="item.to + item.label"
-          :to="item.to"
-          :title="item.label"
+          to="/"
+          title="Home"
           class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors"
-          :class="isActive(item.to) ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]'"
+          :class="[
+            $route.path === '/' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
+          ]"
+        >
+          <UIcon name="i-heroicons-home" class="w-5 h-5" />
+        </NuxtLink>
+        <!-- Other global nav items are placeholders -->
+        <button
+          v-for="item in globalNav.filter(i => i.to !== '/')"
+          :key="item.to + item.label"
+          :title="item.label"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]"
         >
           <UIcon :name="item.icon" class="w-5 h-5" />
-        </NuxtLink>
+        </button>
       </nav>
 
       <div class="flex flex-col gap-2 mt-auto">
         <NuxtLink
-          to="/settings"
-          title="Settings"
+          to="/chat"
+          title="Chat"
           class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors"
-          :class="isActive('/settings') ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]'"
+          :class="[
+            $route.path === '/chat' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
+          ]"
         >
-          <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5" />
+          <UIcon name="i-heroicons-chat-bubble-left-right" class="w-5 h-5" />
+        </NuxtLink>
+        <NuxtLink
+          to="/studio"
+          title="Dev Studio"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors"
+          :class="[
+            $route.path === '/studio' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
+          ]"
+        >
+          <UIcon name="i-heroicons-code-bracket" class="w-5 h-5" />
         </NuxtLink>
         <button class="flex items-center justify-center w-9 h-9 rounded-lg text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] transition-colors">
           <div class="w-7 h-7 rounded-full bg-[#7b68ee] flex items-center justify-center text-white text-xs font-medium">A</div>
@@ -91,28 +110,46 @@ function activeTabClass(tab: string) {
       </div>
 
       <nav class="flex-1 overflow-y-auto scrollbar-hide px-2 space-y-1">
+        <!-- Home is real route -->
         <NuxtLink
-          v-for="item in sidebarTop"
-          :key="item.label"
-          :to="item.to"
+          to="/"
           class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-[13px] transition-colors"
-          :class="isActive(item.to) ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]'"
+          :class="[
+            $route.path === '/' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
+          ]"
+        >
+          <UIcon name="i-heroicons-home" class="w-4 h-4" />
+          Home
+        </NuxtLink>
+
+        <!-- Placeholder sidebar items -->
+        <button
+          v-for="item in sidebarTop.filter(i => i.to !== '/')"
+          :key="item.label"
+          class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-[13px] text-left transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]"
         >
           <UIcon :name="item.icon" class="w-4 h-4" />
           {{ item.label }}
-        </NuxtLink>
+        </button>
 
         <div class="px-3 py-1.5 mt-4 text-[11px] font-semibold uppercase tracking-wider text-[#7b7b7b]">Spaces</div>
+        <!-- Wizarding Code is real route -->
         <NuxtLink
-          v-for="item in spaces"
-          :key="item.label"
-          :to="item.to"
+          to="/studio"
           class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-[13px] transition-colors"
-          :class="isActive(item.to) ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]'"
+          :class="[
+            $route.path === '/studio' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
+          ]"
         >
-          <span class="w-5 h-5 rounded bg-[#e5484d] text-white flex items-center justify-center text-[10px] font-bold">{{ item.emoji }}</span>
-          {{ item.label }}
+          <span class="w-5 h-5 rounded bg-[#e5484d] text-white flex items-center justify-center text-[10px] font-bold">W</span>
+          Wizarding Code
         </NuxtLink>
+
+        <!-- EntelekX space is placeholder -->
+        <button class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-[13px] text-left transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]">
+          <span class="w-5 h-5 rounded bg-[#7b68ee] text-white flex items-center justify-center text-[10px] font-bold">E</span>
+          EntelekX
+        </button>
       </nav>
     </aside>
 
