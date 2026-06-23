@@ -3,6 +3,30 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    color-scheme: dark;
+    /* ClickUp 4.0-inspired workspace palette + EntelekX brand */
+    --ex-bg: #111111;
+    --ex-bg-deep: #090909;
+    --ex-sidebar: #191919;
+    --ex-topbar: #111111;
+    --ex-surface: #111111;
+    --ex-border: rgba(255, 255, 255, 0.08);
+    --ex-border-strong: rgba(255, 255, 255, 0.18);
+    --ex-text: #eeeeee;
+    --ex-text-muted: #b4b4b4;
+    --ex-text-faint: #7b7b7b;
+    --ex-brand: #7b68ee;
+    --ex-brand-hover: #8b7bf2;
+    --ex-brand-soft: #d7d2fb;
+    --ex-danger: #e5484d;
+    --ex-success: #10b981;
+    --ex-success-hover: #34d399;
+    --ex-warning: #f59e0b;
+    --ex-radius: 0.75rem;
+    --ex-radius-sm: 0.5rem;
+  }
+
   html,
   body,
   #__nuxt {
@@ -10,6 +34,84 @@
   }
 
   body {
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    background-color: var(--ex-bg);
+    color: var(--ex-text);
+  }
+
+  select,
+  input,
+  textarea {
+    color-scheme: dark;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-[#111111] border border-white/[0.08] rounded-xl p-4;
+  }
+
+  .btn-primary {
+    @apply bg-[#10b981] text-[#090909] px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors hover:bg-[#34d399];
+  }
+
+  .btn-ghost {
+    @apply px-3 py-1.5 rounded-lg text-[13px] text-[#b4b4b4] border border-white/[0.08] bg-transparent transition-colors hover:bg-white/[0.06] hover:text-[#eeeeee];
+  }
+
+  .icon-btn {
+    @apply w-9 h-9 flex items-center justify-center rounded-lg text-[#b4b4b4] transition-colors hover:bg-white/[0.06] hover:text-[#eeeeee];
+  }
+  .icon-btn.active {
+    @apply bg-white/[0.08] text-[#eeeeee];
+  }
+
+  .nav-item {
+    @apply flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-[13px] text-[#b4b4b4] transition-colors hover:bg-white/[0.06] hover:text-[#eeeeee];
+  }
+  .nav-item.active {
+    @apply bg-white/[0.08] text-[#eeeeee];
+  }
+
+  .tab {
+    @apply px-3.5 py-2 text-[13px] text-[#b4b4b4] border-b-2 border-transparent transition-colors hover:text-[#eeeeee];
+  }
+  .tab.active {
+    @apply text-[#eeeeee] border-[#7b68ee];
+  }
+
+  .tag {
+    @apply text-[11px] px-2 py-0.5 rounded-full bg-white/[0.08] text-[#b4b4b4];
+  }
+
+  .input {
+    @apply w-full bg-[#090909] border border-white/[0.08] rounded-lg px-3 py-2 text-[13px] text-[#eeeeee] outline-none focus:border-white/[0.18];
+  }
+
+  .radio-card {
+    @apply flex items-start gap-3 p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] cursor-pointer transition-colors hover:border-white/[0.14];
+  }
+  .radio-card.selected {
+    @apply border-[#7b68ee] bg-[#7b68ee]/10;
+  }
+}
+
+@layer utilities {
+  .text-2xs {
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-hide::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
   }
 }
