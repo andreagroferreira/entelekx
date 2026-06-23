@@ -70,60 +70,7 @@ function defaultProviderLabel() {
 <template>
   <div class="min-h-screen bg-[#111111] text-[#eeeeee] flex">
     <!-- Global Navigation (52px) -->
-    <aside class="w-[52px] bg-[#191919] border-r border-white/[0.08] flex flex-col items-center py-3 shrink-0 h-screen">
-      <div class="mb-4 shrink-0">
-        <div class="w-8 h-8 rounded-lg bg-[#7b68ee] flex items-center justify-center text-white font-bold text-sm">E</div>
-      </div>
-      <nav class="flex-1 flex flex-col gap-2 min-h-0 overflow-y-auto scrollbar-hide py-1">
-        <NuxtLink
-          to="/"
-          title="Home"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
-        >
-          <UIcon name="i-heroicons-home" class="w-5 h-5" />
-        </NuxtLink>
-        <NuxtLink
-          to="/chat"
-          title="Chat"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
-        >
-          <UIcon name="i-heroicons-chat-bubble-left-right" class="w-5 h-5" />
-        </NuxtLink>
-        <NuxtLink
-          to="/"
-          title="AI Hub"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
-        >
-          <UIcon name="i-heroicons-bolt" class="w-5 h-5" />
-        </NuxtLink>
-        <NuxtLink
-          to="/studio"
-          title="Dev Studio"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
-        >
-          <UIcon name="i-heroicons-code-bracket" class="w-5 h-5" />
-        </NuxtLink>
-        <NuxtLink
-          to="/"
-          title="Life OS"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
-        >
-          <UIcon name="i-heroicons-clipboard-document-list" class="w-5 h-5" />
-        </NuxtLink>
-      </nav>
-      <div class="flex flex-col gap-2 mt-auto shrink-0 pt-2">
-        <NuxtLink
-          to="/settings"
-          title="Settings"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors bg-white/[0.08] text-[#eeeeee] shrink-0"
-        >
-          <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5" />
-        </NuxtLink>
-        <button class="flex items-center justify-center w-9 h-9 rounded-lg text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] transition-colors shrink-0">
-          <div class="w-7 h-7 rounded-full bg-[#7b68ee] flex items-center justify-center text-white text-xs font-medium">A</div>
-        </button>
-      </div>
-    </aside>
+    <AppSidebar />
 
     <!-- Settings sidebar -->
     <aside class="w-[255px] bg-[#191919] border-r border-white/[0.08] flex flex-col shrink-0 h-screen">
