@@ -41,17 +41,17 @@ function activeTabClass(tab: string) {
 <template>
   <div class="min-h-screen bg-[#111111] text-[#eeeeee] flex">
     <!-- Global Navigation (52px) -->
-    <aside class="w-[52px] bg-[#191919] border-r border-white/[0.08] flex flex-col items-center py-3 shrink-0">
-      <div class="mb-4">
+    <aside class="w-[52px] bg-[#191919] border-r border-white/[0.08] flex flex-col items-center py-3 shrink-0 h-screen">
+      <div class="mb-4 shrink-0">
         <div class="w-8 h-8 rounded-lg bg-[#7b68ee] flex items-center justify-center text-white font-bold text-sm">E</div>
       </div>
 
-      <nav class="flex-1 flex flex-col gap-2">
+      <nav class="flex-1 flex flex-col gap-2 min-h-0 overflow-y-auto scrollbar-hide py-1">
         <!-- Home is real route -->
         <NuxtLink
           to="/"
           title="Home"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors shrink-0"
           :class="[
             $route.path === '/' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
           ]"
@@ -63,17 +63,17 @@ function activeTabClass(tab: string) {
           v-for="item in globalNav.filter(i => i.to !== '/')"
           :key="item.to + item.label"
           :title="item.label"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] shrink-0"
         >
           <UIcon :name="item.icon" class="w-5 h-5" />
         </button>
       </nav>
 
-      <div class="flex flex-col gap-2 mt-auto">
+      <div class="flex flex-col gap-2 mt-auto shrink-0 pt-2">
         <NuxtLink
           to="/chat"
           title="Chat"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors shrink-0"
           :class="[
             $route.path === '/chat' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
           ]"
@@ -83,33 +83,43 @@ function activeTabClass(tab: string) {
         <NuxtLink
           to="/studio"
           title="Dev Studio"
-          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors shrink-0"
           :class="[
             $route.path === '/studio' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
           ]"
         >
           <UIcon name="i-heroicons-code-bracket" class="w-5 h-5" />
         </NuxtLink>
-        <button class="flex items-center justify-center w-9 h-9 rounded-lg text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] transition-colors">
+        <NuxtLink
+          to="/settings"
+          title="Settings"
+          class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors shrink-0"
+          :class="[
+            $route.path === '/settings' ? 'bg-white/[0.08] text-[#eeeeee]' : 'text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06]',
+          ]"
+        >
+          <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5" />
+        </NuxtLink>
+        <button class="flex items-center justify-center w-9 h-9 rounded-lg text-[#b4b4b4] hover:text-[#eeeeee] hover:bg-white/[0.06] transition-colors shrink-0">
           <div class="w-7 h-7 rounded-full bg-[#7b68ee] flex items-center justify-center text-white text-xs font-medium">A</div>
         </button>
       </div>
     </aside>
 
     <!-- Home Sidebar (255px) -->
-    <aside class="w-[255px] bg-[#191919] border-r border-white/[0.08] flex flex-col shrink-0">
-      <div class="h-11 flex items-center px-4 border-b border-white/[0.08]">
+    <aside class="w-[255px] bg-[#191919] border-r border-white/[0.08] flex flex-col shrink-0 h-screen">
+      <div class="h-11 flex items-center px-4 border-b border-white/[0.08] shrink-0">
         <span class="font-semibold text-sm">EntelekX</span>
       </div>
 
-      <div class="p-3">
+      <div class="p-3 shrink-0">
         <button class="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] text-[#b4b4b4] text-sm transition-colors">
           <UIcon name="i-heroicons-magnifying-glass" class="w-4 h-4" />
           Search
         </button>
       </div>
 
-      <nav class="flex-1 overflow-y-auto scrollbar-hide px-2 space-y-1">
+      <nav class="flex-1 overflow-y-auto scrollbar-hide px-2 space-y-1 min-h-0 pb-3">
         <!-- Home is real route -->
         <NuxtLink
           to="/"
@@ -154,7 +164,7 @@ function activeTabClass(tab: string) {
     </aside>
 
     <!-- Main content -->
-    <main class="flex-1 flex flex-col min-w-0 bg-[#090909]">
+    <main class="flex-1 flex flex-col min-w-0 bg-[#090909] h-screen overflow-hidden">
       <!-- Top bar -->
       <div class="h-11 bg-[#111111] border-b border-white/[0.08] flex items-center justify-between px-4 shrink-0">
         <div class="flex items-center gap-4">
@@ -186,7 +196,7 @@ function activeTabClass(tab: string) {
       </div>
 
       <!-- Page content -->
-      <div class="flex-1 overflow-auto scrollbar-hide">
+      <div class="flex-1 overflow-y-auto scrollbar-hide overflow-x-hidden">
         <slot />
       </div>
     </main>
